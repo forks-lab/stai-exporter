@@ -6,5 +6,5 @@ RUN make build
 
 FROM alpine:latest
 
-COPY --from=builder /app/bin/chia-exporter /chia-exporter
-CMD ["/chia-exporter", "serve"]
+COPY --from=builder /app/bin/stai-exporter /stai-exporter
+CMD ["/stai-exporter", "serve"]

@@ -6,23 +6,23 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/chia-network/go-chia-libs/pkg/rpc"
-	"github.com/chia-network/go-chia-libs/pkg/types"
+	"github.com/forks-lab/go-stai-libs/pkg/rpc"
+	"github.com/forks-lab/go-stai-libs/pkg/types"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	wrappedPrometheus "github.com/chia-network/chia-exporter/internal/prometheus"
+	wrappedPrometheus "github.com/forks-lab/stai-exporter/internal/prometheus"
 )
 
-type chiaService string
+type staiService string
 
 const (
-	chiaServiceFullNode  chiaService = "full_node"
-	chiaServiceWallet    chiaService = "wallet"
-	chiaServiceCrawler   chiaService = "crawler"
-	chiaServiceTimelord  chiaService = "timelord"
-	chiaServiceHarvester chiaService = "harvester"
-	chiaServiceFarmer    chiaService = "farmer"
+	staiServiceFullNode  staiService = "full_node"
+	staiServiceWallet    staiService = "wallet"
+	staiServiceCrawler   staiService = "crawler"
+	staiServiceTimelord  staiService = "timelord"
+	staiServiceHarvester staiService = "harvester"
+	staiServiceFarmer    staiService = "farmer"
 )
 
 // serviceMetrics defines methods that must be on all metrics services
@@ -58,7 +58,7 @@ type Metrics struct {
 	registry *prometheus.Registry
 
 	// All the serviceMetrics interfaces that are registered
-	serviceMetrics map[chiaService]serviceMetrics
+	serviceMetrics map[staiService]serviceMetrics
 }
 
 // NewMetrics returns a new instance of metrics
@@ -69,7 +69,7 @@ func NewMetrics(port uint16, logLevel log.Level) (*Metrics, error) {
 	metrics := &Metrics{
 		metricsPort:    port,
 		registry:       prometheus.NewRegistry(),
-		serviceMetrics: map[chiaService]serviceMetrics{},
+		serviceMetrics: map[staiService]serviceMetrics{},
 	}
 
 	log.SetLevel(logLevel)
@@ -88,12 +88,12 @@ func NewMetrics(port uint16, logLevel log.Level) (*Metrics, error) {
 
 	// Register each service's metrics
 
-	metrics.serviceMetrics[chiaServiceFullNode] = &FullNodeServiceMetrics{metrics: metrics}
-	metrics.serviceMetrics[chiaServiceWallet] = &WalletServiceMetrics{metrics: metrics}
-	metrics.serviceMetrics[chiaServiceCrawler] = &CrawlerServiceMetrics{metrics: metrics}
-	metrics.serviceMetrics[chiaServiceTimelord] = &TimelordServiceMetrics{metrics: metrics}
-	metrics.serviceMetrics[chiaServiceHarvester] = &HarvesterServiceMetrics{metrics: metrics}
-	metrics.serviceMetrics[chiaServiceFarmer] = &FarmerServiceMetrics{metrics: metrics}
+	metrics.serviceMetrics[staiServiceFullNode] = &FullNodeServiceMetrics{metrics: metrics}
+	metrics.serviceMetrics[staiServiceWallet] = &WalletServiceMetrics{metrics: metrics}
+	metrics.serviceMetrics[staiServiceCrawler] = &CrawlerServiceMetrics{metrics: metrics}
+	metrics.serviceMetrics[staiServiceTimelord] = &TimelordServiceMetrics{metrics: metrics}
+	metrics.serviceMetrics[staiServiceHarvester] = &HarvesterServiceMetrics{metrics: metrics}
+	metrics.serviceMetrics[staiServiceFarmer] = &FarmerServiceMetrics{metrics: metrics}
 
 	// Init each service's metrics
 	for _, service := range metrics.serviceMetrics {
@@ -104,9 +104,9 @@ func NewMetrics(port uint16, logLevel log.Level) (*Metrics, error) {
 }
 
 // newGauge returns a lazy gauge that follows naming conventions
-func (m *Metrics) newGauge(service chiaService, name string, help string) *wrappedPrometheus.LazyGauge {
+func (m *Metrics) newGauge(service staiService, name string, help string) *wrappedPrometheus.LazyGauge {
 	opts := prometheus.GaugeOpts{
-		Namespace: "chia",
+		Namespace: "stai",
 		Subsystem: string(service),
 		Name:      name,
 		Help:      help,
@@ -124,9 +124,9 @@ func (m *Metrics) newGauge(service chiaService, name string, help string) *wrapp
 
 // newGauge returns a gaugeVec that follows naming conventions and registers it with the prometheus collector
 // This doesn't need a lazy wrapper, as they're inherently lazy registered for each label value provided
-func (m *Metrics) newGaugeVec(service chiaService, name string, help string, labels []string) *prometheus.GaugeVec {
+func (m *Metrics) newGaugeVec(service staiService, name string, help string, labels []string) *prometheus.GaugeVec {
 	opts := prometheus.GaugeOpts{
-		Namespace: "chia",
+		Namespace: "stai",
 		Subsystem: string(service),
 		Name:      name,
 		Help:      help,
@@ -140,9 +140,9 @@ func (m *Metrics) newGaugeVec(service chiaService, name string, help string, lab
 }
 
 // newGauge returns a counter that follows naming conventions and registers it with the prometheus collector
-func (m *Metrics) newCounter(service chiaService, name string, help string) *wrappedPrometheus.LazyCounter {
+func (m *Metrics) newCounter(service staiService, name string, help string) *wrappedPrometheus.LazyCounter {
 	opts := prometheus.CounterOpts{
-		Namespace: "chia",
+		Namespace: "stai",
 		Subsystem: string(service),
 		Name:      name,
 		Help:      help,
@@ -159,9 +159,9 @@ func (m *Metrics) newCounter(service chiaService, name string, help string) *wra
 }
 
 // newCounterVec returns a counter that follows naming conventions and registers it with the prometheus collector
-func (m *Metrics) newCounterVec(service chiaService, name string, help string, labels []string) *prometheus.CounterVec {
+func (m *Metrics) newCounterVec(service staiService, name string, help string, labels []string) *prometheus.CounterVec {
 	opts := prometheus.CounterOpts{
-		Namespace: "chia",
+		Namespace: "stai",
 		Subsystem: string(service),
 		Name:      name,
 		Help:      help,
@@ -227,18 +227,18 @@ func (m *Metrics) websocketReceive(resp *types.WebsocketResponse, err error) {
 	log.Debugf("origin: %s command: %s destination: %s data: %s\n", resp.Origin, resp.Command, resp.Destination, string(resp.Data))
 
 	switch resp.Origin {
-	case "chia_full_node":
-		m.serviceMetrics[chiaServiceFullNode].ReceiveResponse(resp)
-	case "chia_wallet":
-		m.serviceMetrics[chiaServiceWallet].ReceiveResponse(resp)
-	case "chia_crawler":
-		m.serviceMetrics[chiaServiceCrawler].ReceiveResponse(resp)
-	case "chia_timelord":
-		m.serviceMetrics[chiaServiceTimelord].ReceiveResponse(resp)
-	case "chia_harvester":
-		m.serviceMetrics[chiaServiceHarvester].ReceiveResponse(resp)
-	case "chia_farmer":
-		m.serviceMetrics[chiaServiceFarmer].ReceiveResponse(resp)
+	case "stai_full_node":
+		m.serviceMetrics[staiServiceFullNode].ReceiveResponse(resp)
+	case "stai_wallet":
+		m.serviceMetrics[staiServiceWallet].ReceiveResponse(resp)
+	case "stai_crawler":
+		m.serviceMetrics[staiServiceCrawler].ReceiveResponse(resp)
+	case "stai_timelord":
+		m.serviceMetrics[staiServiceTimelord].ReceiveResponse(resp)
+	case "stai_harvester":
+		m.serviceMetrics[staiServiceHarvester].ReceiveResponse(resp)
+	case "stai_farmer":
+		m.serviceMetrics[staiServiceFarmer].ReceiveResponse(resp)
 	}
 }
 

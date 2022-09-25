@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/chia-network/go-chia-libs/pkg/rpc"
-	"github.com/chia-network/go-chia-libs/pkg/types"
+	"github.com/forks-lab/go-stai-libs/pkg/rpc"
+	"github.com/forks-lab/go-stai-libs/pkg/types"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 
-	wrappedPrometheus "github.com/chia-network/chia-exporter/internal/prometheus"
+	wrappedPrometheus "github.com/forks-lab/stai-exporter/internal/prometheus"
 )
 
 // Metrics that are based on Harvester RPC calls are in this file
@@ -35,17 +35,17 @@ type HarvesterServiceMetrics struct {
 
 // InitMetrics sets all the metrics properties
 func (s *HarvesterServiceMetrics) InitMetrics() {
-	s.totalPlots = s.metrics.newGauge(chiaServiceHarvester, "total_plots", "Total number of plots on this harvester")
-	s.plotFilesize = s.metrics.newGaugeVec(chiaServiceHarvester, "plot_filesize", "Total filesize of plots on this harvester, by K size", []string{"size", "type"})
-	s.plotCount = s.metrics.newGaugeVec(chiaServiceHarvester, "plot_count", "Total count of plots on this harvester, by K size", []string{"size", "type"})
+	s.totalPlots = s.metrics.newGauge(StaiServiceHarvester, "total_plots", "Total number of plots on this harvester")
+	s.plotFilesize = s.metrics.newGaugeVec(StaiServiceHarvester, "plot_filesize", "Total filesize of plots on this harvester, by K size", []string{"size", "type"})
+	s.plotCount = s.metrics.newGaugeVec(StaiServiceHarvester, "plot_count", "Total count of plots on this harvester, by K size", []string{"size", "type"})
 
-	s.totalFoundProofs = s.metrics.newCounter(chiaServiceHarvester, "total_found_proofs", "Counter of total found proofs since the exporter started")
-	s.lastFoundProofs = s.metrics.newGauge(chiaServiceHarvester, "last_found_proofs", "Number of proofs found for the last farmer_info event")
+	s.totalFoundProofs = s.metrics.newCounter(StaiServiceHarvester, "total_found_proofs", "Counter of total found proofs since the exporter started")
+	s.lastFoundProofs = s.metrics.newGauge(StaiServiceHarvester, "last_found_proofs", "Number of proofs found for the last farmer_info event")
 
-	s.totalEligiblePlots = s.metrics.newCounter(chiaServiceHarvester, "total_eligible_plots", "Counter of total eligible plots since the exporter started")
-	s.lastEligiblePlots = s.metrics.newGauge(chiaServiceHarvester, "last_eligible_plots", "Number of eligible plots for the last farmer_info event")
+	s.totalEligiblePlots = s.metrics.newCounter(StaiServiceHarvester, "total_eligible_plots", "Counter of total eligible plots since the exporter started")
+	s.lastEligiblePlots = s.metrics.newGauge(StaiServiceHarvester, "last_eligible_plots", "Number of eligible plots for the last farmer_info event")
 
-	s.lastLookupTime = s.metrics.newGauge(chiaServiceHarvester, "last_lookup_time", "Lookup time for the last farmer_info event")
+	s.lastLookupTime = s.metrics.newGauge(StaiServiceHarvester, "last_lookup_time", "Lookup time for the last farmer_info event")
 }
 
 // InitialData is called on startup of the metrics server, to allow seeding metrics with current/initial data

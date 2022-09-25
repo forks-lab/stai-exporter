@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/chia-network/chia-exporter/internal/metrics"
+	"github.com/forks-lab/stai-exporter/internal/metrics"
 )
 
 // serveCmd represents the serve command
@@ -25,7 +25,7 @@ var serveCmd = &cobra.Command{
 			log.Fatalln(err.Error())
 		}
 
-		// Run this in the background, so the metrics healthz endpoint can come up while waiting for Chia
+		// Run this in the background, so the metrics healthz endpoint can come up while waiting for STAI
 		go startWebsocket(m)
 
 		// Close the websocket when the app is closing
@@ -48,7 +48,7 @@ func init() {
 
 func startWebsocket(m *metrics.Metrics) {
 	// Loop until we get a connection or cancel
-	// This enables starting the metrics exporter even if the chia RPC service is not up/responding
+	// This enables starting the metrics exporter even if the STAI RPC service is not up/responding
 	// It just retries every 5 seconds to connect to the RPC server until it succeeds or the app is stopped
 	for {
 		err := m.OpenWebsocket()

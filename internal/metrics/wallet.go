@@ -6,12 +6,12 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/chia-network/go-chia-libs/pkg/rpc"
-	"github.com/chia-network/go-chia-libs/pkg/types"
+	"github.com/forks-lab/go-stai-libs/pkg/rpc"
+	"github.com/forks-lab/go-stai-libs/pkg/types"
 	"github.com/prometheus/client_golang/prometheus"
 
-	wrappedPrometheus "github.com/chia-network/chia-exporter/internal/prometheus"
-	"github.com/chia-network/chia-exporter/internal/utils"
+	wrappedPrometheus "github.com/forks-lab/stai-exporter/internal/prometheus"
+	"github.com/forks-lab/stai-exporter/internal/utils"
 )
 
 // Metrics that are based on Wallet RPC calls are in this file
@@ -33,13 +33,13 @@ type WalletServiceMetrics struct {
 // InitMetrics sets all the metrics properties
 func (s *WalletServiceMetrics) InitMetrics() {
 	// Wallet Metrics
-	s.walletSynced = s.metrics.newGauge(chiaServiceWallet, "synced", "")
+	s.walletSynced = s.metrics.newGauge(staiServiceWallet, "synced", "")
 	walletLabels := []string{"fingerprint", "wallet_id", "wallet_type", "asset_id"}
-	s.confirmedBalance = s.metrics.newGaugeVec(chiaServiceWallet, "confirmed_balance", "", walletLabels)
-	s.spendableBalance = s.metrics.newGaugeVec(chiaServiceWallet, "spendable_balance", "", walletLabels)
-	s.maxSendAmount = s.metrics.newGaugeVec(chiaServiceWallet, "max_send_amount", "", walletLabels)
-	s.pendingCoinRemovalCount = s.metrics.newGaugeVec(chiaServiceWallet, "pending_coin_removal_count", "", walletLabels)
-	s.unspentCoinCount = s.metrics.newGaugeVec(chiaServiceWallet, "unspent_coin_count", "", walletLabels)
+	s.confirmedBalance = s.metrics.newGaugeVec(staiServiceWallet, "confirmed_balance", "", walletLabels)
+	s.spendableBalance = s.metrics.newGaugeVec(staiServiceWallet, "spendable_balance", "", walletLabels)
+	s.maxSendAmount = s.metrics.newGaugeVec(staiServiceWallet, "max_send_amount", "", walletLabels)
+	s.pendingCoinRemovalCount = s.metrics.newGaugeVec(staiServiceWallet, "pending_coin_removal_count", "", walletLabels)
+	s.unspentCoinCount = s.metrics.newGaugeVec(staiServiceWallet, "unspent_coin_count", "", walletLabels)
 }
 
 // InitialData is called on startup of the metrics server, to allow seeding metrics with

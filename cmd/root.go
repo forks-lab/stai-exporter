@@ -14,8 +14,8 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "chia-exporter",
-	Short: "Prometheus metric exporter for Chia Blockchain",
+	Use:   "stai-exporter",
+	Short: "Prometheus metric exporter for STAI Blockchain",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -35,7 +35,7 @@ func init() {
 	)
 
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.chia-exporter.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.stai-exporter.yaml)")
 
 	rootCmd.PersistentFlags().IntVar(&metricsPort, "metrics-port", 9914, "The port the metrics server binds to")
 	rootCmd.PersistentFlags().StringVar(&maxmindDBPath, "maxmind-db-path", "", "Path to the maxmind database file")
@@ -65,13 +65,13 @@ func initConfig() {
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".chia-exporter" (without extension).
+		// Search config in home directory with name ".stai-exporter" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".chia-exporter")
+		viper.SetConfigName(".stai-exporter")
 	}
 
-	viper.SetEnvPrefix("CHIA_EXPORTER")
+	viper.SetEnvPrefix("STAI_EXPORTER")
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 	viper.AutomaticEnv() // read in environment variables that match
 

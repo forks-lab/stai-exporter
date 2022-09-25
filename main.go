@@ -1,6 +1,6 @@
 package main
 
-import "github.com/chia-network/chia-exporter/cmd"
+import "github.com/forks-lab/stai-exporter/cmd"
 
 func main() {
 	cmd.Execute()
