@@ -1,3 +1,7 @@
+# Note
+
+This is a modified version of chia-exporter for usage with STAI. It was created by refactoring of main branch (cd39c32).
+
 # STAI Exporter
 
 STAI Exporter is an application that is intended to run alongside a STAI installation and exports prometheus style metrics based on data available from STAI RPCs. Where possible, all data is received as events from websocket subscriptions. Some data that is not available as a metrics event is also fetched as well, but usually in response to an event that was already received that indicates the data may have changed (with the goal to only make as many RPC requests as necessary to get accurate metric data).
