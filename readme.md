@@ -4,9 +4,12 @@ STAI Exporter is an application that is intended to run alongside a STAI install
 
 **_This project is actively under development and relies on data that may not yet be available in a stable release of STAI Blockchain. Dev builds of STAI may contain bugs or other issues that are not present in tagged releases. We do not recommend that you run pre-release/dev versions of STAI Blockchain on mission critical systems._**
 
+<!-- not available for STAI
+
 ## Installation
 
 Download the correct executable file from the release page and run. If you are on debian/ubuntu, you can install using the apt repo, documented below.
+
 
 ### Apt Repo Installation
 
@@ -42,9 +45,11 @@ sudo apt-get update
 sudo apt-get install chia-exporter
 ```
 
+-->
+
 ## Usage
 
-First, install [chia-blockchain](https://github.com/STAI-Network/chia-blockchain). STAI exporter expects to be run on the same machine as the chia blockchain installation, and will use either the default chia config (`~/.chia/mainnet/`) or else the config located at `CHIA_ROOT`, if the environment variable is set.
+First, install [chia-blockchain](https://github.com/STATION-I/stai-blockchain). STAI exporter expects to be run on the same machine as the chia blockchain installation, and will use either the default chia config (`~/.stai/mainnet/`) or else the config located at `STAI_ROOT`, if the environment variable is set.
 
 `stai-exporter serve` will start the metrics exporter on the default port of `9914`. Metrics will be available at `<hostname>:9914/metrics`.
 
@@ -52,7 +57,7 @@ First, install [chia-blockchain](https://github.com/STAI-Network/chia-blockchain
 
 Configuration options can be passed using command line flags, environment variables, or a configuration file, except for `--config`, which is a CLI flag only. For a complete listing of options, run `stai-exporter --help`.
 
-To set a config value as an environment variable, prefix the name with `CHIA_EXPORTER_`, convert all letters to uppercase, and replace any dashes with underscores (`metrics-port` becomes `CHIA_EXPORTER_METRICS_PORT`).
+To set a config value as an environment variable, prefix the name with `STAI_EXPORTER_`, convert all letters to uppercase, and replace any dashes with underscores (`metrics-port` becomes `STAI_EXPORTER_METRICS_PORT`).
 
 To use a config file, create a new yaml file and place any configuration options you want to specify in the file. The config file will be loaded by default from `~/.stai-exporter`, but the location can be overridden with the `--config` flag.
 
